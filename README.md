@@ -13,5 +13,5 @@ Get into root folder
 
     cd PHPprofile
 
-Start your local server and ready to go
+Start your local server and follow the index.php
 

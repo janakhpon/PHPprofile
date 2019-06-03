@@ -16,16 +16,16 @@
     <div class="container">
 
 
-        <form method="post" action="insert.php">
+        <form method="post" action="insert.php" enctype="multipart/form-data">
             <div class="form-group">
-                <input type="text" class="form-control"  name="name" placeholder="Your name here ">
-               
+                <input type="text" class="form-control" name="username" placeholder="Your name here ">
+
             </div>
 
 
             <div class="input-group">
                 <div class="custom-file">
-                    <input type="file" name="image" class="custom-file-input" id="inputGroupFile04">
+                    <input type="File" name="Image" class="custom-file-input" id="inputGroupFile04" value="">
                     <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
                 </div>
             </div>
@@ -38,6 +38,52 @@
 
 
 
+    <div class="container">
+
+        <?php
+
+        $conn = mysqli_connect("localhost", "root", "", "profile");
+        $sql = "SELECT * FROM profile";
+        if ($result = mysqli_query($conn, $sql)) {
+
+            if (mysqli_num_rows($result) > 0) {
+
+                while ($row = mysqli_fetch_array($result)) {
+                    $id = $row['id'];
+                    $username = $row['name'];
+                    $Image = $row['image'];
+                    $display = <<<DELIMITER
+
+            <div class="card" style="width: 18rem;">
+            
+            <img src="Uploads/$Image" class="card-img-top" >
+            <div class="card-body">
+                <p class="card-text">$username</p>
+                <h4>$id</h4>
+            </div>
+        </div>
+
+DELIMITER;
+
+
+                    echo $display;
+                }
+            } else {
+                echo '<div class="alert alert-warning">nothing on list! Sorry</div>';
+                exit;
+            }
+        } else {
+            echo '<div class="alert alert-warning">An error occured!</div>';
+            exit;
+            //    echo "ERROR: Unable to excecute: $sql." . mysqli_error($link);
+        }
+
+        ?>
+
+
+
+
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

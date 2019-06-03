@@ -1,32 +1,28 @@
 <?php
-if(isset($_POST["Submit"])){
-  $name = $_POST["PostTitle"];
+
+
+
+
+if(isset($_POST['submit'])){
+    
+  $username = $_POST['username'];
   $Image     = $_FILES["Image"]["name"];
   $Target    = "uploads/".basename($_FILES["Image"]["name"]);
-  if(empty($name)){
-    $_SESSION["ErrorMessage"]= "Title Cant be empty";
-    Redirect_to("index.php");
+  $conn = mysqli_connect("localhost", "root", "", "profile");
+  $sql = "INSERT INTO profile (`name`, `image`) VALUES
+   ('$username', '$Image')";
+  move_uploaded_file($_FILES["Image"]["tmp_name"],$Target);
+
+
+
+  $result = mysqli_query($conn, $sql);
+  if(!$result){
+    header("Location:index.php?failed");
   }else{
-    // Query to insert Post in DB When everything is fine
-    global $ConnectingDB;
-    $sql = "INSERT INTO posts(datetime,title,category,author,image,post)";
-    $sql .= "VALUES(:dateTime,:postTitle,:categoryName,:adminName,:imageName,:postDescription)";
-    $stmt = $ConnectingDB->prepare($sql);
-    $stmt->bindValue(':dateTime',$DateTime);
-    $stmt->bindValue(':postTitle',$PostTitle);
-    $stmt->bindValue(':categoryName',$Category);
-    $stmt->bindValue(':adminName',$Admin);
-    $stmt->bindValue(':imageName',$Image);
-    $stmt->bindValue(':postDescription',$PostText);
-    $Execute=$stmt->execute();
-    move_uploaded_file($_FILES["Image"]["tmp_name"],$Target);
-    if($Execute){
-      $_SESSION["SuccessMessage"]="Post with id : " .$ConnectingDB->lastInsertId()." added Successfully";
-      Redirect_to("AddNewPost.php");
-    }else {
-      $_SESSION["ErrorMessage"]= "Something went wrong. Try Again !";
-      Redirect_to("AddNewPost.php");
-    }
+      header("Location:index.php?success");
   }
-} //Ending of Submit Button If-Condition
+
+}
+
+
  ?>
